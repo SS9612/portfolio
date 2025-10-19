@@ -1,0 +1,182 @@
+---
+// Tech stack data organized by categories
+const techCategories = [
+  {
+    name: "Frontend",
+    technologies: [
+      { name: "React", icon: "⚛️", description: "Component-based UI library" },
+      { name: "Next.js", icon: "▲", description: "Full-stack React framework" },
+      { name: "TypeScript", icon: "🔷", description: "Type-safe JavaScript" },
+      { name: "JavaScript", icon: "🟨", description: "Dynamic programming language" },
+      { name: "Tailwind CSS", icon: "🎨", description: "Utility-first CSS framework" },
+      { name: "SCSS", icon: "💎", description: "CSS preprocessor with variables" },
+      { name: "Astro", icon: "🚀", description: "Static site generator" }
+    ]
+  },
+  {
+    name: "Backend",
+    technologies: [
+      { name: "C#", icon: "🔵", description: "Modern programming language" },
+      { name: "ASP.NET Core", icon: "🌐", description: "Web API framework" },
+      { name: "Razor Pages", icon: "📄", description: "Server-side web pages" },
+      { name: "Umbraco", icon: "🌿", description: ".NET CMS platform" },
+      { name: "RESTful APIs", icon: "🔌", description: "API design patterns" },
+      { name: "Entity Framework", icon: "🗄️", description: "ORM for .NET" }
+    ]
+  },
+  {
+    name: "Database & Caching",
+    technologies: [
+      { name: "PostgreSQL", icon: "🐘", description: "Advanced relational database" },
+      { name: "Cloud SQL", icon: "☁️", description: "Managed database service" },
+      { name: "PostGIS", icon: "🗺️", description: "Spatial database extensions" },
+      { name: "Redis", icon: "🔴", description: "In-memory data store" }
+    ]
+  },
+  {
+    name: "Cloud & DevOps",
+    technologies: [
+      { name: "Google Cloud Run", icon: "🏃", description: "Serverless container platform" },
+      { name: "Azure", icon: "☁️", description: "Microsoft cloud platform" },
+      { name: "Azure DevOps", icon: "🔧", description: "DevOps services platform" },
+      { name: "GitHub Actions", icon: "⚙️", description: "CI/CD automation" },
+      { name: "Vercel", icon: "▲", description: "Frontend deployment platform" },
+      { name: "Firebase Hosting", icon: "🔥", description: "Static web hosting" },
+      { name: "Docker", icon: "🐳", description: "Containerization platform" },
+      { name: "Git", icon: "📝", description: "Version control system" }
+    ]
+  },
+  {
+    name: "Security & Testing",
+    technologies: [
+      { name: "JWT", icon: "🎫", description: "JSON Web Token authentication" },
+      { name: "OAuth 2.0", icon: "🔐", description: "Authorization framework" },
+      { name: "xUnit", icon: "🧪", description: ".NET testing framework" },
+      { name: "SignalR", icon: "⚡", description: "Real-time communication" }
+    ]
+  },
+  {
+    name: "APIs & Integrations",
+    technologies: [
+      { name: "YouTube Data API", icon: "📺", description: "YouTube platform integration" },
+      { name: "Spotify Web API", icon: "🎵", description: "Music streaming integration" },
+      { name: "Swagger/OpenAPI", icon: "📋", description: "API documentation standard" }
+    ]
+  }
+];
+---
+
+<div class="tech-stack">
+  {techCategories.map(category => (
+    <div class="category-section">
+      <h3 class="category-title">{category.name}</h3>
+      <div class="tech-grid">
+        {category.technologies.map(tech => (
+          <div class="tech-card">
+            <div class="tech-icon">{tech.icon}</div>
+            <div class="tech-info">
+              <h4 class="tech-name">{tech.name}</h4>
+              <p class="tech-description">{tech.description}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .tech-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .category-section {
+    background: var(--card);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    border: 1px solid var(--border);
+  }
+
+  .category-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+    color: var(--fg);
+    text-align: center;
+  }
+
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .tech-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    transition: all var(--duration) var(--easing);
+  }
+
+  .tech-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary);
+  }
+
+  .tech-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .tech-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tech-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 var(--space-1) 0;
+    color: var(--fg);
+  }
+
+  .tech-description {
+    font-size: 0.875rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .tech-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tech-card {
+      padding: var(--space-2);
+    }
+
+    .category-section {
+      padding: var(--space-4);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .tech-card {
+      flex-direction: column;
+      text-align: center;
+      gap: var(--space-2);
+    }
+
+    .tech-icon {
+      font-size: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,207 @@
+# SongShuttle
+
+## Overview
+
+SongShuttle is a music transfer application that seamlessly moves playlists between YouTube and Spotify. Built with modern web technologies, it provides users with an intuitive interface to migrate their music collections across platforms while preserving metadata and maintaining high accuracy in song matching.
+
+## Key Features
+
+### OAuth Integration
+- Secure authentication with both YouTube and Spotify APIs
+- Token-based session management for seamless user experience
+- Automatic token refresh to maintain continuous access
+
+### Intelligent Song Matching
+- Advanced algorithm that matches songs across platforms using multiple criteria
+- Fuzzy matching for songs with slight title or artist variations
+- Manual override options for unmatched tracks
+
+### Real-time Transfer Progress
+- Live progress tracking with detailed status updates
+- Batch processing for large playlists without timeouts
+- Error handling and retry mechanisms for failed transfers
+
+### Playlist Metadata Preservation
+- Maintains original playlist structure and order
+- Preserves custom playlist names and descriptions
+- Handles various metadata fields including album art and release dates
+
+import Mermaid from '@/components/Mermaid.astro';
+
+<Mermaid content={`flowchart TD
+    A["User Login"] --> B["Select Source Platform"]
+    B --> C["Choose Playlist"]
+    C --> D["Select Target Platform"]
+    D --> E["Configure Transfer Settings"]
+    E --> F["Start Transfer Process"]
+    F --> G["Match Songs Algorithm"]
+    G --> H{"All Songs Matched?"}
+    H -->|Yes| I["Create Target Playlist"]
+    H -->|No| J["Show Manual Review"]
+    J --> K["User Confirms Matches"]
+    K --> I
+    I --> L["Transfer Complete"]
+    L --> M["Show Results Summary"]`} />
+
+## Technical Highlights
+
+### Backend Architecture
+- **C# ASP.NET Core** with clean architecture principles
+- RESTful API design with comprehensive error handling
+- Dependency injection and service layer pattern
+- Async/await patterns for optimal performance
+
+### Frontend Implementation
+- **React** with functional components and hooks
+- **Tailwind CSS** for responsive, mobile-first design
+- State management with React Context and useReducer
+- Custom hooks for API integration and data fetching
+
+### Cloud Infrastructure
+- **Google Cloud Run** for serverless, auto-scaling backend
+- **Cloud SQL (Postgres)** for persistent data storage
+- **Firebase Hosting** with global CDN for fast content delivery
+- Environment-based configuration for different deployment stages
+
+### API Integrations
+- **YouTube Data API v3** for playlist and video metadata
+- **Spotify Web API** for playlist management and track information
+- Rate limiting and quota management for both APIs
+- Comprehensive error handling and fallback strategies
+
+<Mermaid content={`sequenceDiagram
+    participant User
+    participant Frontend
+    participant Backend
+    participant YouTubeAPI
+    participant SpotifyAPI
+    participant Database
+
+    User->>Frontend: Login with YouTube
+    Frontend->>Backend: OAuth Request
+    Backend->>YouTubeAPI: Exchange Code for Token
+    YouTubeAPI-->>Backend: Access Token
+    Backend->>Database: Store User Session
+    Backend-->>Frontend: Authentication Success
+
+    User->>Frontend: Select Playlist to Transfer
+    Frontend->>Backend: Get Playlist Details
+    Backend->>YouTubeAPI: Fetch Playlist Data
+    YouTubeAPI-->>Backend: Playlist + Tracks
+    Backend->>Database: Cache Playlist Data
+    Backend-->>Frontend: Playlist Information
+
+    User->>Frontend: Start Transfer
+    Frontend->>Backend: Initiate Transfer
+    Backend->>SpotifyAPI: Create Target Playlist
+    Backend->>SpotifyAPI: Search & Match Tracks
+    SpotifyAPI-->>Backend: Matched Track IDs
+    Backend->>SpotifyAPI: Add Tracks to Playlist
+    Backend->>Database: Log Transfer History
+    Backend-->>Frontend: Transfer Complete
+    Frontend-->>User: Success Notification`} />
+
+## Code Highlights
+
+### Intelligent Song Matching Algorithm
+```csharp
+// Fuzzy matching with Levenshtein distance for cross-platform song search
+public async Task<SpotifyTrack> FindBestMatch(YouTubeVideo video)
+{
+    var searchQuery = $"{video.Artist} {video.Title}";
+    var candidates = await _spotifyClient.SearchTracks(searchQuery, limit: 10);
+    
+    return candidates
+        .Select(track => new {
+            Track = track,
+            Score = CalculateSimilarity(video, track)
+        })
+        .OrderByDescending(x => x.Score)
+        .FirstOrDefault()?.Track;
+}
+
+private double CalculateSimilarity(YouTubeVideo video, SpotifyTrack track)
+{
+    var titleSimilarity = LevenshteinDistance(video.Title, track.Name) / 
+                         Math.Max(video.Title.Length, track.Name.Length);
+    var artistSimilarity = LevenshteinDistance(video.Artist, track.Artists.First().Name) / 
+                          Math.Max(video.Artist.Length, track.Artists.First().Name.Length);
+    
+    return 1.0 - (titleSimilarity * 0.7 + artistSimilarity * 0.3);
+}
+```
+
+### Rate Limiting & Retry Logic
+```csharp
+// Exponential backoff for API rate limits with circuit breaker pattern
+public async Task<T> ExecuteWithRetry<T>(Func<Task<T>> apiCall, int maxRetries = 3)
+{
+    for (int i = 0; i < maxRetries; i++)
+    {
+        try 
+        { 
+            return await apiCall(); 
+        }
+        catch (RateLimitException ex)
+        {
+            if (i == maxRetries - 1) throw;
+            
+            var delay = TimeSpan.FromSeconds(Math.Pow(2, i) + Random.Shared.Next(1, 3));
+            await Task.Delay(delay);
+        }
+    }
+    throw new MaxRetriesExceededException();
+}
+```
+
+### React Custom Hook for Transfer Progress
+```typescript
+// Custom hook for real-time transfer progress tracking with error handling
+function useTransferProgress(transferId: string) {
+  const [progress, setProgress] = useState<TransferProgress>({ current: 0, total: 0 });
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (!transferId) return;
+    
+    const eventSource = new EventSource(`/api/transfers/${transferId}/progress`);
+    
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        setProgress(data);
+        setError(null);
+      } catch (err) {
+        setError('Failed to parse progress data');
+      }
+    };
+    
+    eventSource.onerror = () => {
+      setError('Connection lost. Retrying...');
+      eventSource.close();
+    };
+    
+    return () => eventSource.close();
+  }, [transferId]);
+  
+  return { 
+    progress, 
+    percentage: progress.total > 0 ? (progress.current / progress.total) * 100 : 0,
+    error 
+  };
+}
+```
+
+### Performance Optimizations
+- Lazy loading for large playlists
+- Debounced search for real-time track matching
+- Caching strategies for frequently accessed data
+- Optimized database queries with proper indexing
+- CDN delivery for static assets and API responses
+
+### Security Features
+- JWT token-based authentication
+- Secure API key management
+- Input validation and sanitization
+- CORS configuration for cross-origin requests
+- Rate limiting to prevent API abuse

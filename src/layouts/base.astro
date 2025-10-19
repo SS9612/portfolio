@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from '@/components/ThemeToggle.astro';
+import '@/styles/global.css';
 
 const { title = 'Portfolio', description = 'Projects and case studies', ogImage = '/og/default.png' } = Astro.props;
 ---
@@ -9,26 +10,80 @@ const { title = 'Portfolio', description = 'Projects and case studies', ogImage 
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={Astro.url.href} />
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
-    <link rel="stylesheet" href="/src/styles/global.css" />
-    <!-- Analytics (Plausible example) -->
-    <!-- <script defer data-domain="your-domain" src="https://plausible.io/js/script.js"></script> -->
+    <meta property="og:url" content={Astro.url} />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Stefan Strandberg",
+        "url": "https://portfolio-22420.web.app",
+        "sameAs": [
+          "https://github.com/SS9612",
+          "https://www.linkedin.com/in/stefan-strandberg-40067527a/",
+          "https://www.instagram.com/stefanstrandberg96/"
+        ]
+      }
+    </script>
+    
+    <!-- Analytics (Plausible) -->
+    {import.meta.env.PROD && import.meta.env.PUBLIC_ANALYTICS_DOMAIN && (
+      <script defer data-domain={import.meta.env.PUBLIC_ANALYTICS_DOMAIN} src="https://plausible.io/js/script.js"></script>
+    )}
   </head>
   <body>
-    <header class="container" style="padding: 1rem 0;">
-      <nav style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
-        <a href="/" class="button">Home</a>
-        <div style="display:flex;gap:.5rem;align-items:center">
-          <a href="/projects" class="button">Projects</a>
-          <ThemeToggle />
-        </div>
-      </nav>
+    <a href="#main" class="skip-link">Skip to main content</a>
+    <header class="header">
+      <div class="container" style="padding: 1rem 0;">
+        <nav class="nav">
+          <a href="/" class="button">Home</a>
+          <div class="nav-links">
+            <a href="/projects" class="button">Projects</a>
+            <a href="/about" class="button">About</a>
+            <a href="mailto:Stefan.m.strandberg@hotmail.com" class="button">Contact</a>
+            <ThemeToggle />
+          </div>
+        </nav>
+      </div>
     </header>
-    <main class="container">
+    <main id="main" class="container">
       <slot />
     </main>
-    <footer class="container" style="padding:2rem 0;color:var(--muted)">© {new Date().getFullYear()} Your Name</footer>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="social-links">
+            <a href="https://github.com/SS9612" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="GitHub profile">GitHub</a>
+            <a href="https://www.linkedin.com/in/stefan-strandberg-40067527a/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="LinkedIn profile">LinkedIn</a>
+            <a href="https://www.instagram.com/stefanstrandberg96/" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Instagram profile">Instagram</a>
+          </div>
+          <div class="copyright">© {new Date().getFullYear()} Stefan Strandberg</div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Sticky header behavior
+      window.addEventListener('scroll', () => {
+        const header = document.querySelector('.header');
+        if (window.scrollY > 20) {
+          header?.classList.add('scrolled');
+        } else {
+          header?.classList.remove('scrolled');
+        }
+      });
+    </script>
   </body>
 </html>

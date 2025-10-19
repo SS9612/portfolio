@@ -1,0 +1,255 @@
+# Småjobb
+
+## Overview
+
+Småjobb is a local marketplace platform connecting youth with micro-jobs and freelance opportunities in their communities. The platform facilitates small-scale work arrangements, from gardening and tutoring to errands and odd jobs, creating economic opportunities for young people while providing convenient services for local residents.
+
+## Key Features
+
+### Job Posting and Discovery
+- **Geolocation-based job search** with radius filtering
+- **Category-based organization** (gardening, tutoring, errands, pet care, etc.)
+- **Advanced filtering** by price range, duration, and skill requirements
+- **Real-time job updates** with instant notifications
+
+### User Management
+- **Dual user profiles** for job seekers and employers
+- **Verification system** with identity and skill validation
+- **Portfolio showcase** for completed jobs and reviews
+- **Rating and review system** for trust and quality assurance
+
+### Communication System
+- **In-app messaging** between job seekers and employers
+- **Push notifications** for job matches and messages
+- **Automated matching** based on skills and location
+- **Dispute resolution** support for job-related issues
+
+### Payment and Security
+- **Secure payment processing** with escrow functionality
+- **Multi-step verification** for high-value jobs
+- **Insurance coverage** for certain job categories
+- **Background check integration** for safety assurance
+
+import Mermaid from '@/components/Mermaid.astro';
+
+<Mermaid content={`flowchart TD
+    A["User Registration"] --> B{"User Type?"}
+    B -->|Job Seeker| C["Complete Profile"]
+    B -->|Employer| D["Verify Business"]
+    C --> E["Browse Available Jobs"]
+    D --> F["Post New Job"]
+    E --> G["Apply for Job"]
+    F --> H["Review Applications"]
+    G --> I["Wait for Response"]
+    H --> J["Select Applicant"]
+    I --> K{"Application Accepted?"}
+    K -->|Yes| L["Start Job"]
+    K -->|No| M["Continue Browsing"]
+    J --> N["Job Assignment"]
+    L --> O["Complete Work"]
+    N --> O
+    O --> P["Submit for Review"]
+    P --> Q["Payment Processing"]
+    Q --> R["Rate & Review"]
+    R --> S["Job Complete"]`} />
+
+## Technical Highlights
+
+### Frontend Architecture
+- **React with TypeScript** for type-safe development
+- **Modern React patterns** including hooks, context, and custom components
+- **Responsive design** with mobile-first approach
+- **Progressive Web App** features for native-like experience
+
+### Backend Implementation
+- **C# ASP.NET Core** with clean architecture
+- **Entity Framework Core** for database operations
+- **JWT authentication** with role-based authorization
+- **SignalR** for real-time communication features
+
+### Cloud Infrastructure
+- **Google Cloud Run** for auto-scaling containerized services
+- **Cloud SQL (Postgres)** for relational data management
+- **Firebase Hosting** with custom domain support
+- **Cloud Storage** for file uploads and user documents
+
+### Real-time Features
+- **WebSocket connections** for live messaging
+- **Push notification service** for mobile alerts
+- **Real-time job updates** using SignalR hubs
+- **Live location tracking** for job proximity
+
+<Mermaid content={`sequenceDiagram
+    participant JobSeeker
+    participant Frontend
+    participant Backend
+    participant Database
+    participant PaymentAPI
+    participant NotificationService
+
+    JobSeeker->>Frontend: Browse Jobs
+    Frontend->>Backend: Get Jobs by Location
+    Backend->>Database: Query Jobs Table
+    Database-->>Backend: Job Listings
+    Backend-->>Frontend: Filtered Results
+    Frontend-->>JobSeeker: Display Jobs
+
+    JobSeeker->>Frontend: Apply for Job
+    Frontend->>Backend: Submit Application
+    Backend->>Database: Store Application
+    Backend->>NotificationService: Notify Employer
+    Backend-->>Frontend: Application Sent
+
+    Note over Backend,Database: Employer Reviews Application
+    Backend->>Database: Update Application Status
+    Backend->>NotificationService: Notify Job Seeker
+    Backend-->>Frontend: Status Update
+
+    JobSeeker->>Frontend: Complete Job
+    Frontend->>Backend: Mark Job Complete
+    Backend->>PaymentAPI: Process Payment
+    PaymentAPI-->>Backend: Payment Confirmed
+    Backend->>Database: Update Job Status
+    Backend->>NotificationService: Notify Both Parties
+    Backend-->>Frontend: Job Completed`} />
+
+### Database Design
+- **Normalized schema** with proper relationships
+- **Geospatial indexing** for location-based queries
+- **Full-text search** capabilities for job descriptions
+- **Audit trails** for all user actions and transactions
+
+### Security Implementation
+- **Multi-factor authentication** for sensitive operations
+- **Data encryption** at rest and in transit
+- **GDPR compliance** with data protection measures
+- **Regular security audits** and penetration testing
+
+### Performance Optimizations
+- **Database query optimization** with proper indexing
+- **Caching strategies** for frequently accessed data
+- **Image optimization** and CDN delivery
+- **Lazy loading** for large job listings
+- **Pagination** for efficient data loading
+
+## Code Highlights
+
+### Geospatial Queries with PostGIS
+```csharp
+// Efficient location-based job search with spatial indexing and distance calculation
+public async Task<List<Job>> FindNearbyJobs(double lat, double lon, int radiusKm)
+{
+    var userLocation = new Point(lon, lat) { SRID = 4326 };
+    var radiusMeters = radiusKm * 1000;
+    
+    return await _context.Jobs
+        .Where(j => j.Status == JobStatus.Open)
+        .Where(j => j.Location.Distance(userLocation) <= radiusMeters)
+        .OrderBy(j => j.Location.Distance(userLocation))
+        .Take(50)
+        .Select(j => new Job {
+            Id = j.Id,
+            Title = j.Title,
+            Description = j.Description,
+            Price = j.Price,
+            Distance = j.Location.Distance(userLocation) / 1000, // Convert to km
+            CreatedAt = j.CreatedAt
+        })
+        .ToListAsync();
+}
+```
+
+### SignalR Real-time Notifications
+```csharp
+// Real-time job application notifications with user groups and typing indicators
+public class JobHub : Hub
+{
+    public async Task JoinJobGroup(string jobId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, $"job-{jobId}");
+    }
+    
+    public async Task NotifyEmployer(string employerId, JobApplication application)
+    {
+        await Clients.User(employerId).SendAsync("NewApplication", new {
+            JobId = application.JobId,
+            ApplicantName = application.Applicant.Name,
+            ApplicantRating = application.Applicant.AverageRating,
+            Timestamp = DateTime.UtcNow,
+            Message = application.CoverMessage
+        });
+    }
+    
+    public async Task NotifyTyping(string jobId, string userId, bool isTyping)
+    {
+        await Clients.GroupExcept($"job-{jobId}", Context.ConnectionId)
+            .SendAsync("UserTyping", new { UserId = userId, IsTyping = isTyping });
+    }
+}
+```
+
+### TypeScript Type-safe API Client
+```typescript
+// Type-safe API client with automatic serialization and error handling
+class SmajobApi {
+  private baseUrl: string;
+  
+  constructor(baseUrl: string = '/api') {
+    this.baseUrl = baseUrl;
+  }
+  
+  async applyForJob(jobId: string, application: JobApplicationDto): Promise<Application> {
+    const response = await this.request(`/jobs/${jobId}/apply`, {
+      method: 'POST',
+      body: JSON.stringify(application)
+    });
+    
+    return response.json();
+  }
+  
+  async getNearbyJobs(location: GeoLocation, radius: number): Promise<Job[]> {
+    const params = new URLSearchParams({
+      lat: location.latitude.toString(),
+      lon: location.longitude.toString(),
+      radius: radius.toString()
+    });
+    
+    const response = await this.request(`/jobs/nearby?${params}`);
+    return response.json();
+  }
+  
+  private async request(endpoint: string, options: RequestInit = {}): Promise<Response> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const config: RequestInit = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+      },
+      ...options
+    };
+    
+    const response = await fetch(url, config);
+    
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ message: 'Unknown error' }));
+      throw new ApiError(response.status, error.message);
+    }
+    
+    return response;
+  }
+}
+
+class ApiError extends Error {
+  constructor(public status: number, message: string) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+```
+
+### Integration Features
+- **Third-party payment processors** (Stripe, PayPal)
+- **Background check services** for user verification
+- **Mapping services** for location features
+- **Email and SMS services** for notifications
+- **Analytics tracking** for user behavior insights

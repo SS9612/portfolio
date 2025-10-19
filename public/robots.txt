@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Sitemap: https://portfolio-22420.web.app/sitemap-index.xml
+
+

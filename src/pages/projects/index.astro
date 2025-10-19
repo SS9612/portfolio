@@ -1,9 +1,23 @@
 ---
 import Base from "@/layouts/Base.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
 import projects from "@/content/projects/data/projects.json";
-import FilterIsland from "@/components/FilterIsland.astro";
+const list = projects; // placeholder for future filtering
 ---
-<Base title="Projects — Your Name" description="All live projects.">
+<Base title="Projects — Stefan Strandberg" description="Browse my portfolio of live web applications featuring modern technologies like React, Cloud Run, and Firebase.">
   <h1 style="margin:1rem 0">Projects</h1>
-  <FilterIsland items={projects} />
+  {list.length === 0 ? (
+    <p class="text-muted">No projects match your filters.</p>
+  ) : (
+    <div class="projects-grid">
+      {list.map(p => <ProjectCard p={p} />)}
+    </div>
+  )}
 </Base>
+
+<style>
+  .projects-grid { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 481px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .projects-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 1280px) { .projects-grid { grid-template-columns: repeat(4, 1fr); } }
+</style>

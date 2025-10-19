@@ -1,4 +1,4 @@
-<button class="button" id="theme-toggle">Toggle theme</button>
+<button class="button" id="theme-toggle" aria-label="Toggle theme">Toggle theme</button>
 <script>
   const key = 'theme';
   const apply = v => {
@@ -12,6 +12,3 @@
     localStorage.setItem(key, next); apply(next);
   });
 </script>
-<style>
-:root.dark { --fg:#f3f4f6; --bg:#0b0b0c; --muted:#9ca3af; --card:#151517; }
-</style>

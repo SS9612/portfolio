@@ -4,16 +4,110 @@ import ProjectCard from "@/components/ProjectCard.astro";
 import projects from "@/content/projects/data/projects.json";
 const featured = projects.slice(0,3);
 ---
-<Base title="Your Name — Web Apps" description="Portfolio of hosted webapps and case studies.">
-  <section style="padding:2rem 0">
-    <h1 style="font-size:2.2rem;margin:0 0 .75rem">I build clean, fast web apps.</h1>
-    <p style="color:var(--muted);max-width:48ch">Browse my live projects, read case studies, and view source code.</p>
-    <div style="margin-top:1rem;display:flex;gap:.75rem">
-      <a class="button" href="/projects">View Projects</a>
-      <a class="button" href="mailto:you@domain.com">Contact</a>
+<Base title="Stefan Strandberg — Web Apps" description="Portfolio of hosted webapps and case studies.">
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">I build clean, fast web apps.</h1>
+      <p class="hero-description">Browse my live projects, read case studies, and view source code. Each project showcases modern web technologies and user-centered design.</p>
+      <div class="hero-ctas">
+        <a class="button button-primary" href="/projects">View Projects</a>
+        <a class="button" href="mailto:Stefan.m.strandberg@hotmail.com">Get In Touch</a>
+      </div>
     </div>
   </section>
-  <section style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem">
-    {featured.map(p => <ProjectCard p={p} />)}
+  
+  <section class="featured-projects">
+    <h2 class="section-title">Featured Projects</h2>
+    <div class="projects-grid">
+      {featured.map(p => <ProjectCard p={p} />)}
+    </div>
   </section>
 </Base>
+
+<style>
+  .hero {
+    padding: var(--space-7) 0;  /* 48px */
+    text-align: center;
+    border-radius: var(--radius-lg);
+  }
+  
+  .hero-content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;  /* Display size */
+    line-height: 2.75rem;
+    font-weight: 700;
+    margin-bottom: var(--space-5);
+    background: linear-gradient(135deg, var(--fg) 0%, var(--muted) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .hero-description {
+    font-size: 1.125rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+  
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .button-primary {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+  
+  .button-primary:hover {
+    background: var(--muted);
+    border-color: var(--muted);
+    color: var(--bg);
+  }
+  
+  .featured-projects {
+    padding: 3rem 0;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--fg);
+  }
+  
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-5);
+  }
+  
+  @media (max-width: 768px) {
+    .hero {
+      padding: 2rem 0;
+    }
+    
+    .hero-ctas {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .button {
+      width: 100%;
+      max-width: 200px;
+      text-align: center;
+    }
+    
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

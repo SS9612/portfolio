@@ -1,0 +1,100 @@
+---
+export interface Props {
+  content: string;
+}
+
+const { content } = Astro.props;
+---
+
+<div class="mermaid-container">
+  <div class="mermaid" data-content={content}></div>
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+
+  // Initialize Mermaid
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      primaryColor: '#3b82f6',
+      primaryTextColor: '#1f2937',
+      primaryBorderColor: '#d1d5db',
+      lineColor: '#6b7280',
+      secondaryColor: '#f3f4f6',
+      tertiaryColor: '#ffffff',
+      background: '#ffffff',
+      mainBkg: '#ffffff',
+      secondBkg: '#f9fafb',
+      tertiaryBkg: '#f3f4f6'
+    },
+    flowchart: {
+      useMaxWidth: true,
+      htmlLabels: true,
+      curve: 'basis'
+    },
+    sequence: {
+      useMaxWidth: true,
+      wrap: true
+    },
+    securityLevel: 'loose'
+  });
+
+  // Function to render a single diagram
+  function renderDiagram(diagram) {
+    const content = diagram.getAttribute('data-content');
+    if (content && !diagram.hasAttribute('data-rendered')) {
+      try {
+        diagram.innerHTML = content;
+        diagram.setAttribute('data-rendered', 'true');
+        mermaid.init(undefined, diagram);
+      } catch (error) {
+        console.error('Mermaid rendering error:', error);
+        diagram.innerHTML = `<pre>${content}</pre>`;
+      }
+    }
+  }
+
+  // Render diagrams when the page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    const diagrams = document.querySelectorAll('.mermaid[data-content]');
+    diagrams.forEach(renderDiagram);
+  });
+
+  // Also render on page navigation (for SPA-like behavior)
+  if (typeof window !== 'undefined') {
+    const observer = new MutationObserver(() => {
+      const diagrams = document.querySelectorAll('.mermaid[data-content]:not([data-rendered])');
+      diagrams.forEach(renderDiagram);
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+</script>
+
+<style>
+  .mermaid-container {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: var(--card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+  }
+
+  .mermaid {
+    text-align: center;
+  }
+
+  /* Dark theme support */
+  :root.dark .mermaid-container {
+    background: var(--card);
+  }
+
+  :root.dark .mermaid {
+    filter: invert(1) hue-rotate(180deg);
+  }
+</style>

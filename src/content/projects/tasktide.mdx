@@ -3,12 +3,31 @@ title: "TaskTide Case Study"
 ---
 
 ## Overview
-Brief goals, constraints, and outcomes.
+TaskTide is a kanban-style task manager focused on fast interactions and collaboration.
+The goal was to ship a delightful, responsive UI with low operational overhead.
 
 ## Highlights
-- Realtime collaboration with WebSocket
-- Offline-first caching
-- 99.95% uptime, <$25/mo infra
+- Optimistic UI updates with server reconciliation
+- Realtime presence and board updates
+- Zero-config deployments and preview environments
 
 ## Architecture
-Describe stack and trade-offs…
+Frontend uses React with server-rendered routes. Data layer abstracts network retries and
+serialization. Below is a simplified example of an optimistic update pattern:
+
+```ts
+async function addCard(columnId: string, title: string) {
+  const tempId = `temp-${Date.now()}`;
+  boardState.addLocal({ id: tempId, columnId, title });
+  try {
+    const created = await api.createCard({ columnId, title });
+    boardState.replace(tempId, created);
+  } catch (err) {
+    boardState.remove(tempId);
+    throw err;
+  }
+}
+```
+
+> Notes: Optimistic UIs dramatically improve perceived performance but require careful
+> error recovery and idempotent server handlers.

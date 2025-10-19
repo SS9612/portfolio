@@ -1,0 +1,185 @@
+---
+import Base from '@/layouts/base.astro';
+import TechStack from '@/components/TechStack.astro';
+---
+
+<Base 
+  title="About Stefan Strandberg — Full-Stack Developer"
+  description="Full-stack developer specializing in React, C#, and cloud architecture. Building scalable web applications with modern technologies."
+>
+  <main id="main">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1 class="hero-title">About Me</h1>
+          <p class="hero-description">
+           Full-stack developer from Sweden with experience building frontend & backend systems.
+           Bachelor of Education, Subjects Sports & English. Higher Vocational Education as a software engineer.
+           Intern at Sigma Technology Software Solutions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+      <div class="container">
+        <div class="about-content">
+          <h2>My Journey</h2>
+          <p>
+            I'm currently learning and growing as a full-stack developer, working with modern web technologies 
+            like React, TypeScript, and C#. Through my projects, I've had the opportunity to build applications 
+            including music transfer tools and local marketplace platforms, which have been great learning experiences.
+          </p>
+          <p>
+            I'm passionate about open-source development and always eager to learn new technologies. 
+            When I'm not coding, I enjoy exploring new frameworks, 
+            and connecting with the developer community to continue growing my skills.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech-section">
+      <div class="container">
+        <h2>Technologies & Tools</h2>
+        <p class="tech-intro">
+          Here's a comprehensive overview of the technologies I work with to build modern web applications.
+        </p>
+        <TechStack />
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-content">
+          <h2>Let's Work Together</h2>
+          <p>
+            Interested in collaborating or have a project in mind? I'd love to hear from you.
+          </p>
+          <div class="cta-buttons">
+            <a href="/projects" class="button button-primary">View My Projects</a>
+            <a href="mailto:Stefan.m.strandberg@hotmail.com" class="button">Get In Touch</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .hero {
+    padding: var(--space-6) 0;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: var(--space-4);
+    color: var(--fg);
+  }
+
+  .hero-description {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+
+  .about-section {
+    margin-bottom: var(--space-6);
+  }
+
+  .about-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: var(--space-4);
+    color: var(--fg);
+  }
+
+  .about-content p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .about-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  .tech-section {
+    margin-bottom: var(--space-6);
+  }
+
+  .tech-section h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: var(--space-2);
+    color: var(--fg);
+    text-align: center;
+  }
+
+  .tech-intro {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: var(--space-6);
+    font-size: 1.125rem;
+  }
+
+  .cta-section {
+    background: var(--card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6) 0;
+    text-align: center;
+  }
+
+  .cta-content h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    color: var(--fg);
+  }
+
+  .cta-content p {
+    font-size: 1.125rem;
+    color: var(--muted);
+    margin-bottom: var(--space-5);
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding: var(--space-4) 0;
+    }
+
+    .about-content h2,
+    .tech-section h2,
+    .cta-content h2 {
+      font-size: 1.75rem;
+    }
+
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>

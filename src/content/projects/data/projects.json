@@ -1,14 +1,38 @@
 [
   {
-    "slug": "tasktide",
-    "name": "TaskTide",
-    "tagline": "Kanban task manager with realtime sync",
+    "slug": "songshuttle",
+    "name": "SongShuttle",
+    "tagline": "Music transfer app: move playlists from YouTube to Spotify",
     "status": "Live",
-    "stack": ["React", "Node", "Postgres"],
-    "url": "https://tasktide.app",
-    "repo": "https://github.com/you/tasktide",
-    "thumbnail": "/og/tasktide.png",
-    "date": "2025-03-10",
-    "tags": ["webapp","productivity"]
+    "stack": [
+      "React",
+      "Tailwind",
+      "C#",
+      "Cloud Run",
+      "Cloud SQL (Postgres)",
+      "Firebase Hosting"
+    ],
+    "url": "https://songshuttle-b7b57.web.app/",
+    "repo": "",
+    "thumbnail": "/og/songshuttle.png",
+    "tags": ["music", "transfer", "spotify", "youtube"]
+  },
+  {
+    "slug": "smajobb",
+    "name": "Småjobb",
+    "tagline": "Youth micro‑jobs platform for local communities",
+    "status": "Beta",
+    "stack": [
+      "React",
+      "TypeScript",
+      "C#",
+      "Cloud Run",
+      "Cloud SQL (Postgres)",
+      "Firebase Hosting"
+    ],
+    "url": "https://ultra-tendril-474220-u7.web.app/",
+    "repo": "",
+    "thumbnail": "/og/ultra-tendril.png",
+    "tags": ["marketplace", "community", "youth", "freelance"]
   }
 ]

@@ -16,24 +16,31 @@ const title = `${project.name} — Project`;
 const desc = project.tagline;
 const og = project.thumbnail;
 
-// Dynamic import for case study content
+// MDX case study lookup by slug using import.meta.glob
+const modules = import.meta.glob('/src/content/projects/*.mdx');
+const mdxBySlug = Object.fromEntries(
+  Object.entries(modules).map(([path, loader]) => [path.split('/').pop()?.replace('.mdx',''), loader])
+);
 let caseStudy = null;
-try {
-  caseStudy = await import(`@/content/projects/${slug}.mdx`);
-} catch (e) {
-  // Project doesn't have MDX content
+if (mdxBySlug[slug]) {
+  caseStudy = await mdxBySlug[slug]();
 }
 ---
 <Base title={title} description={desc} ogImage={og}>
   <a href="/projects" class="button">← Back</a>
   <h1 style="margin:1rem 0">{project.name}</h1>
   <p style="color:var(--muted)">{project.tagline}</p>
-  <img src={project.thumbnail} alt={project.name} style="width:100%;border-radius:12px;margin:1rem 0" />
+  <ul style="display:flex;flex-wrap:wrap;gap:.5rem;margin:.75rem 0 1rem;padding:0;list-style:none">
+    {project.stack.map(s => <li class="chip" aria-label={`Tech: ${s}`}>{s}</li>)}
+  </ul>
+  <img src={project.thumbnail} alt={project.name} width="1280" height="720" style="width:100%;height:auto;border-radius:12px;margin:1rem 0" />
   <div style="display:flex;gap:.75rem;margin:1rem 0">
-    <a class="button" href={project.url} target="_blank" rel="noreferrer">Open App</a>
-    <a class="button" href={project.repo} target="_blank" rel="noreferrer">Source Code</a>
+    <a class="button" href={project.url} target="_blank" rel="noreferrer noopener">Open App</a>
+    {project.repo ? (
+      <a class="button" href={project.repo} target="_blank" rel="noreferrer noopener">Source Code</a>
+    ) : null}
   </div>
 
   {/* Optional case study content */}
-  {caseStudy ? <caseStudy.default /> : null}
+  {caseStudy ? <section class="mdx"><caseStudy.default /></section> : null}
 </Base>
