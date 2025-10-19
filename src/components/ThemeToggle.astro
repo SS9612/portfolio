@@ -1,0 +1,17 @@
+<button class="button" id="theme-toggle">Toggle theme</button>
+<script>
+  const key = 'theme';
+  const apply = v => {
+    if (v === 'dark') document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
+  };
+  const current = localStorage.getItem(key) || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  apply(current);
+  document.getElementById('theme-toggle').addEventListener('click', () => {
+    const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+    localStorage.setItem(key, next); apply(next);
+  });
+</script>
+<style>
+:root.dark { --fg:#f3f4f6; --bg:#0b0b0c; --muted:#9ca3af; --card:#151517; }
+</style>

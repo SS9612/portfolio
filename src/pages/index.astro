@@ -1,0 +1,19 @@
+---
+import Base from "@/layouts/Base.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import projects from "@/content/projects/data/projects.json";
+const featured = projects.slice(0,3);
+---
+<Base title="Your Name — Web Apps" description="Portfolio of hosted webapps and case studies.">
+  <section style="padding:2rem 0">
+    <h1 style="font-size:2.2rem;margin:0 0 .75rem">I build clean, fast web apps.</h1>
+    <p style="color:var(--muted);max-width:48ch">Browse my live projects, read case studies, and view source code.</p>
+    <div style="margin-top:1rem;display:flex;gap:.75rem">
+      <a class="button" href="/projects">View Projects</a>
+      <a class="button" href="mailto:you@domain.com">Contact</a>
+    </div>
+  </section>
+  <section style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem">
+    {featured.map(p => <ProjectCard p={p} />)}
+  </section>
+</Base>

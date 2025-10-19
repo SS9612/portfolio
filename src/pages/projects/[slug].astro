@@ -1,0 +1,39 @@
+---
+import Base from "@/layouts/Base.astro";
+import projects from "@/content/projects/data/projects.json";
+
+export async function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { slug } = Astro.params;
+
+const title = `${project.name} — Project`;
+const desc = project.tagline;
+const og = project.thumbnail;
+
+// Dynamic import for case study content
+let caseStudy = null;
+try {
+  caseStudy = await import(`@/content/projects/${slug}.mdx`);
+} catch (e) {
+  // Project doesn't have MDX content
+}
+---
+<Base title={title} description={desc} ogImage={og}>
+  <a href="/projects" class="button">← Back</a>
+  <h1 style="margin:1rem 0">{project.name}</h1>
+  <p style="color:var(--muted)">{project.tagline}</p>
+  <img src={project.thumbnail} alt={project.name} style="width:100%;border-radius:12px;margin:1rem 0" />
+  <div style="display:flex;gap:.75rem;margin:1rem 0">
+    <a class="button" href={project.url} target="_blank" rel="noreferrer">Open App</a>
+    <a class="button" href={project.repo} target="_blank" rel="noreferrer">Source Code</a>
+  </div>
+
+  {/* Optional case study content */}
+  {caseStudy ? <caseStudy.default /> : null}
+</Base>

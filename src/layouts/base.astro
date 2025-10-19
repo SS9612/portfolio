@@ -1,0 +1,34 @@
+---
+import ThemeToggle from '@/components/ThemeToggle.astro';
+
+const { title = 'Portfolio', description = 'Projects and case studies', ogImage = '/og/default.png' } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+    <!-- Analytics (Plausible example) -->
+    <!-- <script defer data-domain="your-domain" src="https://plausible.io/js/script.js"></script> -->
+  </head>
+  <body>
+    <header class="container" style="padding: 1rem 0;">
+      <nav style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+        <a href="/" class="button">Home</a>
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <a href="/projects" class="button">Projects</a>
+          <ThemeToggle />
+        </div>
+      </nav>
+    </header>
+    <main class="container">
+      <slot />
+    </main>
+    <footer class="container" style="padding:2rem 0;color:var(--muted)">© {new Date().getFullYear()} Your Name</footer>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+---
+const { items = [] } = Astro.props;
+---
+<div>
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem">
+    <input id="q" class="card" placeholder="Search or filter..." />
+    <select id="tag" class="card"><option value="">All</option><option>webapp</option><option>productivity</option></select>
+  </div>
+  <div id="grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem"></div>
+</div>
+<script>
+  const items = JSON.parse(decodeURIComponent("{encodeURIComponent(JSON.stringify(items))}"));
+  const grid = document.getElementById('grid'); const q = document.getElementById('q'); const tag = document.getElementById('tag');
+  const render = (list) => {
+    grid.innerHTML = list.map(p => `
+      <a class="card" href="/projects/${p.slug}" style="display:block;text-decoration:none;color:inherit">
+        <img src="${p.thumbnail}" alt="${p.name}" style="width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;margin-bottom:.75rem" />
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3 style="margin:0;font-size:1.1rem;font-weight:600">${p.name}</h3>
+          <span style="font-size:.75rem;opacity:.8">${p.status}</span>
+        </div>
+        <p style="margin:.25rem 0 .5rem;opacity:.8">${p.tagline}</p>
+        <div style="font-size:.8rem;opacity:.9">${p.stack.join(' · ')}</div>
+      </a>`).join('');
+  };
+  const apply = () => {
+    const term = q.value.toLowerCase(); const tg = tag.value;
+    let list = items;
+    if (tg) list = list.filter(p => (p.tags||[]).includes(tg));
+    if (term) list = list.filter(p => (p.name+p.tagline+p.stack.join(',')).toLowerCase().includes(term));
+    render(list);
+  };
+  q.addEventListener('input', apply); tag.addEventListener('change', apply);
+  render(items);
+</script>

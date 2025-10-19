@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "tasktide",
+    "name": "TaskTide",
+    "tagline": "Kanban task manager with realtime sync",
+    "status": "Live",
+    "stack": ["React", "Node", "Postgres"],
+    "url": "https://tasktide.app",
+    "repo": "https://github.com/you/tasktide",
+    "thumbnail": "/og/tasktide.png",
+    "date": "2025-03-10",
+    "tags": ["webapp","productivity"]
+  }
+]

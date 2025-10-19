@@ -1,0 +1,12 @@
+:root {
+  --radius: 16px;
+  --fg: #0b0b0c; --bg:#fff; --muted:#6b7280; --card:#f6f7f9;
+  --gap-1: .5rem; --gap-2: .75rem; --gap-3: 1rem; --gap-4: 1.5rem; --gap-5: 2rem;
+}
+@media (prefers-color-scheme: dark){
+  :root { --fg:#f3f4f6; --bg:#0b0b0c; --muted:#9ca3af; --card:#151517; }
+}
+html,body{margin:0;padding:0;color:var(--fg);background:var(--bg);font:16px/1.6 system-ui;}
+.container { max-width: 1120px; margin: 0 auto; padding: 0 var(--gap-3); }
+.card{background:var(--card);border-radius:var(--radius);padding:var(--gap-3);}
+.button{border-radius:12px;padding:.6rem 1rem;border:1px solid #ddd;text-decoration:none;display:inline-block}

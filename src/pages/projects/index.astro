@@ -1,0 +1,9 @@
+---
+import Base from "@/layouts/Base.astro";
+import projects from "@/content/projects/data/projects.json";
+import FilterIsland from "@/components/FilterIsland.astro";
+---
+<Base title="Projects — Your Name" description="All live projects.">
+  <h1 style="margin:1rem 0">Projects</h1>
+  <FilterIsland items={projects} />
+</Base>
